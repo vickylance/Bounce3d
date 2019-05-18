@@ -40,31 +40,8 @@ class Game {
   createScene() {
     // Create a basic BJS Scene object
     this.scene = new Scene(this.engine);
-    // Create a ArcRotateCamera, and set its position to {x: 0, y: 5, z: -10}
-    this.camera = new ArcRotateCamera(
-      "mainCamera",
-      Math.PI / 2,
-      Math.PI / 3,
-      45,
-      new Vector3(0, 5, -10),
-      this.scene
-    );
 
-    // // Follow Cam
-    // this.camera = new FollowCamera("FollowCam", new Vector3(0, 5, -10), this.scene);
-    // this.camera.radius = 30;
-    // this.camera.heightOffset = 10;
-    // this.camera.rotationOffset = 0;
-    // this.camera.cameraAcceleration = 0.5;
-    // this.camera.maxCameraSpeed = 10;
-    // this.camera.attachControl(this.canvas, true);
-
-    // Target the camera to scene origin
-    this.camera.setTarget(Vector3.Zero());
-    // Attach the camera to the canvas
-    // this.camera.attachControl(this.canvas, false);
-    this.camera.panningSensibility = 0; // disable camera panning
-
+    this.setupCamera();
     this.setupLighting();
     this.setupPhysics();
     this.setupControls();
@@ -133,6 +110,36 @@ class Game {
     ground.receiveShadows = true;
 
     return this.render();
+  }
+
+  setupCamera() {
+    // Create a ArcRotateCamera, and set its position to {x: 0, y: 5, z: -10}
+    this.camera = new ArcRotateCamera(
+      "mainCamera",
+      Math.PI / 2,
+      Math.PI / 3,
+      45,
+      new Vector3(0, 5, -10),
+      this.scene
+    );
+
+    // // Follow Cam
+    // this.camera = new FollowCamera("FollowCam", new Vector3(0, 5, -10), this.scene);
+    // this.camera.radius = 30;
+    // this.camera.heightOffset = 10;
+    // this.camera.rotationOffset = 0;
+    // this.camera.cameraAcceleration = 0.5;
+    // this.camera.maxCameraSpeed = 10;
+    // this.camera.attachControl(this.canvas, true);
+
+    // Target the camera to scene origin
+    this.camera.setTarget(Vector3.Zero());
+    // Attach the camera to the canvas
+    this.camera.panningSensibility = 0; // disable camera panning
+    // this.camera.angularSensibilityX = 10;
+
+    this.scene.activeCamera = this.camera;
+    this.scene.activeCamera.attachControl(this.canvas, false);
   }
 
   setupLighting() {
