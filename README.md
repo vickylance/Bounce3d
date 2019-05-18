@@ -27,8 +27,9 @@ Checkout the live demo of the game in the below URL.
 8. Lens flare
 9. Day and Night cycle
 10. Load Mesh for Player Ball, Ground and Environment Setup
-11. Materials for Ball, Ground and Environment.
+11. Materials for Ball, Ground and Environment
 12. Tweak lighting & shadows in the scene
+13. Add sound effects and background music
 
 ### Game Mechanics
 
