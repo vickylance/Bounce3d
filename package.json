@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "parcel ./index.html",
-    "build": "parcel ./index.html -d docs",
+    "build": "parcel ./index.html -d docs --public-url ./",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
