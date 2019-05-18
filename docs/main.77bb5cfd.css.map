@@ -1,0 +1,1 @@
+{"version":3,"sources":["scss/main.scss"],"names":[],"mappings":"AAAA;EACE;EACA;;;AAGF;EACE;EACA","file":"main.77bb5cfd.css","sourceRoot":"..","sourcesContent":["body, html {\n  padding: 0;\n  margin: 0;\n}\n\ncanvas {\n  width: 100vw;\n  height: 100vh;\n}"]}
