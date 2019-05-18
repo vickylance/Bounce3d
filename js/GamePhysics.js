@@ -71,7 +71,7 @@ class Game {
     sphere.physicsImpostor = new PhysicsImpostor(
       sphere,
       PhysicsImpostor.SphereImpostor,
-      { mass: 5, restitution: 0.7, friction: 0.8 },
+      { mass: 10, restitution: 0.3, friction: 300 },
       this.scene
     );
     // sphere.physicsImpostor.setLinearVelocity(new Vector3(1, 0, 1));
@@ -85,7 +85,6 @@ class Game {
     });
     let fn = () => {
       console.log("Something happened");
-      
     }
     sphere.physicsImpostor.oncollide = function(e){
       console.log("Collide Evemnt: ", e)
@@ -148,7 +147,7 @@ class Game {
 
   setupPhysics() {
     // Direction and force of gravity
-    this.gravityVector = new Vector3(0, -9.81, 0);
+    this.gravityVector = new Vector3(0, -90, 0);
     // Use Ammo physics plugin, set a small fixed timestep as the colliders on the gltf are thin causing missed collisions if spheres are moving to quickly
     // this.physicsPlugin = new AmmoJSPlugin(true, Ammo);
     this.physicsPlugin = new CannonJSPlugin(true);
@@ -165,52 +164,67 @@ class Game {
     this.keyboard.downPressed = false;
   
     this.direction = Vector3.Zero();
-    this.speed = new Vector3(2, 2, 2);
+    this.speed = 2;
     // user input
     window.addEventListener("keydown", event => {
       let { code } = event;
+
+      // Forward and Backward controls
       if (code ==='ArrowUp' || code === 'KeyW') {
-        // this.direction = new Vector3(0, 0, -1).multiply(this.speed);
+        this.direction.z = -1 * this.speed;
         this.keyboard.upPressed = true;
         console.log('up', this.keyboard);
       } else if (code === 'ArrowDown' || code === 'KeyS') {
-        // this.direction = new Vector3(0, 0, 1).multiply(this.speed);
+        this.direction.z = 1 * this.speed;
         this.keyboard.downPressed = true;
         console.log('down', this.keyboard);
       }
 
+      // Left and Right controls
       if (code === 'ArrowLeft' || code === 'KeyA') {
-        // this.direction = new Vector3(1, 0, 0).multiply(this.speed);
+        this.direction.x = 1 * this.speed;
         this.keyboard.leftPressed = true;
         console.log('left', this.keyboard);
       } else if (code === 'ArrowRight' || code === 'KeyD') {
-        // this.direction = new Vector3(-1, 0, 0).multiply(this.speed);
+        this.direction.x = -1 * this.speed;
         this.keyboard.rightPressed = true;
         console.log('right', this.keyboard);
+      }
+
+      // Jump control
+      if (code === 'Space') {
+        this.keyboard.jump = true;
       }
     });
 
     window.addEventListener("keyup", event => {
-      // this.direction = Vector3.Zero();
       let { code } = event;
+
+      // Forward and Backward controls
       if (code ==='ArrowUp' || code === 'KeyW') {
-        // this.direction = new Vector3(0, 0, -1).multiply(this.speed);
+        this.direction.z = 0;
         this.keyboard.upPressed = false;
         console.log('up', this.keyboard);
       } else if (code === 'ArrowDown' || code === 'KeyS') {
-        // this.direction = new Vector3(0, 0, 1).multiply(this.speed);
+        this.direction.z = 0;
         this.keyboard.downPressed = false;
         console.log('down', this.keyboard);
       }
 
+      // Left and Right controls
       if (code === 'ArrowLeft' || code === 'KeyA') {
-        // this.direction = new Vector3(1, 0, 0).multiply(this.speed);
+        this.direction.x = 0;
         this.keyboard.leftPressed = false;
         console.log('left', this.keyboard);
       } else if (code === 'ArrowRight' || code === 'KeyD') {
-        // this.direction = new Vector3(-1, 0, 0).multiply(this.speed);
+        this.direction.x = 0;
         this.keyboard.rightPressed = false;
         console.log('right', this.keyboard);
+      }
+
+      // Jump control
+      if (code === 'Space') {
+        this.keyboard.jump = false;
       }
     });
   }
