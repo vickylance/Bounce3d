@@ -2,6 +2,12 @@
 
 A Simple and fun Bounce 3D game using Babylon.js
 
+## Live demo
+
+Checkout the live demo of the game in the below URL.
+
+<https://vickylance.github.io/Bounce3d/>
+
 ## TODO list
 
 1. Load an actual mesh for Player Ball
