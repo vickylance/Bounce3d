@@ -10,6 +10,7 @@ import {
   HemisphericLight,
   DirectionalLight,
   ShadowGenerator,
+  FollowCamera,
   StandardMaterial,
   Color3,
   PhysicsImpostor,
@@ -48,10 +49,21 @@ class Game {
       new Vector3(0, 5, -10),
       this.scene
     );
+
+    // // Follow Cam
+    // this.camera = new FollowCamera("FollowCam", new Vector3(0, 5, -10), this.scene);
+    // this.camera.radius = 30;
+    // this.camera.heightOffset = 10;
+    // this.camera.rotationOffset = 0;
+    // this.camera.cameraAcceleration = 0.5;
+    // this.camera.maxCameraSpeed = 10;
+    // this.camera.attachControl(this.canvas, true);
+
     // Target the camera to scene origin
     this.camera.setTarget(Vector3.Zero());
     // Attach the camera to the canvas
     // this.camera.attachControl(this.canvas, false);
+    this.camera.panningSensibility = 0; // disable camera panning
 
     this.setupLighting();
     this.setupPhysics();
@@ -66,8 +78,12 @@ class Game {
       false,
       Mesh.FRONTSIDE
     );
+    var ballMaterial = new StandardMaterial("ground", this.scene);
+    ballMaterial.diffuseColor = Color3.Red();
+    sphere.material = ballMaterial;
     // Move the sphere upward 1/2 of its height
     sphere.position.y = 20;
+    this.camera.lockedTarget = sphere;
     sphere.physicsImpostor = new PhysicsImpostor(
       sphere,
       PhysicsImpostor.SphereImpostor,
@@ -94,7 +110,10 @@ class Game {
     // };
 
     // Create a built-in "ground" shape; its constructor takes 6 params : name, width, height, subdivision, scene, updatable
-    var ground = Mesh.CreateGround("ground1", 64, 64, 2, this.scene, false);
+    var ground = Mesh.CreateGround("ground", 64, 64, 2, this.scene, false);
+    var groundMaterial = new StandardMaterial("ground", this.scene);
+    groundMaterial.diffuseColor = Color3.Green();
+    ground.material = groundMaterial;
     ground.physicsImpostor = new PhysicsImpostor(
       ground,
       PhysicsImpostor.BoxImpostor,
