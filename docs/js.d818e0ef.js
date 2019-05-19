@@ -13938,7 +13938,13 @@ function () {
     key: "setupCamera",
     value: function setupCamera() {
       // Create a ArcRotateCamera, and set its position to {x: 0, y: 5, z: -10}
-      this.camera = new _babylonjs.ArcRotateCamera("mainCamera", Math.PI / 2, Math.PI / 3, 45, new _babylonjs.Vector3(0, 5, -10), this.scene); // // Follow Cam
+      this.camera = new _babylonjs.ArcRotateCamera("mainCamera", Math.PI / 2, Math.PI / 3, 45, new _babylonjs.Vector3(0, 5, -10), this.scene);
+      this.camera.lowerRadiusLimit = 5;
+      this.camera.upperRadiusLimit = 70;
+      this.camera.lowerAlphaLimit = 1;
+      this.camera.upperalphalimit = 1;
+      this.camera.lowerBetaLimit = Math.PI / 10;
+      this.camera.upperBetaLimit = Math.PI / 2; // // Follow Cam
       // this.camera = new FollowCamera("FollowCam", new Vector3(0, 5, -10), this.scene);
       // this.camera.radius = 30;
       // this.camera.heightOffset = 10;
@@ -14115,7 +14121,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63550" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60460" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
