@@ -1,5 +1,4 @@
 import * as CANNON from "cannon";
-// import Cannon from 'cannon';
 import {
   Scene,
   Engine,
@@ -73,14 +72,25 @@ class Game {
     this.scene.registerBeforeRender(() => {
       // move player.
       sphere.applyImpulse(this.direction, sphere.position);
+      // make the player jump
+      if (this.keyboard.jump && sphere.canJump) {
+        console.log("jump")
+        sphere.applyImpulse(new Vector3(0, 200, 0), sphere.position);
+        this.keyboard.jump = false;
+        sphere.canJump = false;
+      }
+      // console.log(this.camera.getFrontPosition(1));
+      // console.log(this.camera.getDirection(new Vector3(0, sphere.position.y, 0)));
+      
       // sphere.physicsImpostor.setLinearVelocity(this.direction);
       // this.applyImpulse(this.direction, this.position);
     });
-    let fn = () => {
-      console.log("Something happened");
+    let collisionDetection = () => {
+      console.log("Collision happened");
+      sphere.canJump = true;
     }
     sphere.physicsImpostor.oncollide = function(e){
-      console.log("Collide Evemnt: ", e)
+      console.log("Collide Event: ", e)
     }
     // this.scene.beforeRender = () => {
     //   sphere.physicsImpostor.physicsBody.linearVelocity.scaleEqual(0.95);
@@ -98,10 +108,10 @@ class Game {
       this.scene
     );
     ground.physicsImpostor.onCollide((e, body) => {
-      console.log("Collide Evemnt: ", e, body)
+      console.log("Collide Event: ", e, body)
     })
 
-    sphere.physicsImpostor.registerOnPhysicsCollide(ground.physicsImpostor, fn);
+    sphere.physicsImpostor.registerOnPhysicsCollide(ground.physicsImpostor, collisionDetection);
 
     // add objects to cast shadow
     this.shadowGenerator.addShadowCaster(sphere);
@@ -124,10 +134,10 @@ class Game {
     );
     this.camera.lowerRadiusLimit = 5;
     this.camera.upperRadiusLimit = 70;
-    this.camera.lowerAlphaLimit = 1;
-    this.camera.upperalphalimit = 1;
     this.camera.lowerBetaLimit = Math.PI/10;
     this.camera.upperBetaLimit = Math.PI/2;
+    // Let's remove default keyboard:
+    this.camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput");
 
     // // Follow Cam
     // this.camera = new FollowCamera("FollowCam", new Vector3(0, 5, -10), this.scene);
@@ -196,6 +206,8 @@ class Game {
     this.keyboard.downPressed = false;
   
     this.direction = Vector3.Zero();
+    this.camera.direction = this.camera.getFrontPosition(1).subtract(this.camera.position).normalize();
+
     this.speed = 2;
     // user input
     window.addEventListener("keydown", event => {
@@ -205,22 +217,22 @@ class Game {
       if (code ==='ArrowUp' || code === 'KeyW') {
         this.direction.z = -1 * this.speed;
         this.keyboard.upPressed = true;
-        console.log('up', this.keyboard);
+        // console.log('up', this.keyboard);
       } else if (code === 'ArrowDown' || code === 'KeyS') {
         this.direction.z = 1 * this.speed;
         this.keyboard.downPressed = true;
-        console.log('down', this.keyboard);
+        // console.log('down', this.keyboard);
       }
 
       // Left and Right controls
       if (code === 'ArrowLeft' || code === 'KeyA') {
         this.direction.x = 1 * this.speed;
         this.keyboard.leftPressed = true;
-        console.log('left', this.keyboard);
+        // console.log('left', this.keyboard);
       } else if (code === 'ArrowRight' || code === 'KeyD') {
         this.direction.x = -1 * this.speed;
         this.keyboard.rightPressed = true;
-        console.log('right', this.keyboard);
+        // console.log('right', this.keyboard);
       }
 
       // Jump control
@@ -236,22 +248,22 @@ class Game {
       if (code ==='ArrowUp' || code === 'KeyW') {
         this.direction.z = 0;
         this.keyboard.upPressed = false;
-        console.log('up', this.keyboard);
+        // console.log('up', this.keyboard);
       } else if (code === 'ArrowDown' || code === 'KeyS') {
         this.direction.z = 0;
         this.keyboard.downPressed = false;
-        console.log('down', this.keyboard);
+        // console.log('down', this.keyboard);
       }
 
       // Left and Right controls
       if (code === 'ArrowLeft' || code === 'KeyA') {
         this.direction.x = 0;
         this.keyboard.leftPressed = false;
-        console.log('left', this.keyboard);
+        // console.log('left', this.keyboard);
       } else if (code === 'ArrowRight' || code === 'KeyD') {
         this.direction.x = 0;
         this.keyboard.rightPressed = false;
-        console.log('right', this.keyboard);
+        // console.log('right', this.keyboard);
       }
 
       // Jump control

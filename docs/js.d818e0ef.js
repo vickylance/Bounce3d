@@ -13898,16 +13898,27 @@ function () {
 
       this.scene.registerBeforeRender(function () {
         // move player.
-        sphere.applyImpulse(_this2.direction, sphere.position); // sphere.physicsImpostor.setLinearVelocity(this.direction);
+        sphere.applyImpulse(_this2.direction, sphere.position); // make the player jump
+
+        if (_this2.keyboard.jump && sphere.canJump) {
+          console.log("jump");
+          sphere.applyImpulse(new _babylonjs.Vector3(0, 200, 0), sphere.position);
+          _this2.keyboard.jump = false;
+          sphere.canJump = false;
+        } // console.log(this.camera.getFrontPosition(1));
+        // console.log(this.camera.getDirection(new Vector3(0, sphere.position.y, 0)));
+        // sphere.physicsImpostor.setLinearVelocity(this.direction);
         // this.applyImpulse(this.direction, this.position);
+
       });
 
-      var fn = function fn() {
-        console.log("Something happened");
+      var collisionDetection = function collisionDetection() {
+        console.log("Collision happened");
+        sphere.canJump = true;
       };
 
       sphere.physicsImpostor.oncollide = function (e) {
-        console.log("Collide Evemnt: ", e);
+        console.log("Collide Event: ", e);
       }; // this.scene.beforeRender = () => {
       //   sphere.physicsImpostor.physicsBody.linearVelocity.scaleEqual(0.95);
       // };
@@ -13925,9 +13936,9 @@ function () {
         restitution: 0.7
       }, this.scene);
       ground.physicsImpostor.onCollide(function (e, body) {
-        console.log("Collide Evemnt: ", e, body);
+        console.log("Collide Event: ", e, body);
       });
-      sphere.physicsImpostor.registerOnPhysicsCollide(ground.physicsImpostor, fn); // add objects to cast shadow
+      sphere.physicsImpostor.registerOnPhysicsCollide(ground.physicsImpostor, collisionDetection); // add objects to cast shadow
 
       this.shadowGenerator.addShadowCaster(sphere); // setup objects to receive shadow
 
@@ -13941,10 +13952,10 @@ function () {
       this.camera = new _babylonjs.ArcRotateCamera("mainCamera", Math.PI / 2, Math.PI / 3, 45, new _babylonjs.Vector3(0, 5, -10), this.scene);
       this.camera.lowerRadiusLimit = 5;
       this.camera.upperRadiusLimit = 70;
-      this.camera.lowerAlphaLimit = 1;
-      this.camera.upperalphalimit = 1;
       this.camera.lowerBetaLimit = Math.PI / 10;
-      this.camera.upperBetaLimit = Math.PI / 2; // // Follow Cam
+      this.camera.upperBetaLimit = Math.PI / 2; // Let's remove default keyboard:
+
+      this.camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput"); // // Follow Cam
       // this.camera = new FollowCamera("FollowCam", new Vector3(0, 5, -10), this.scene);
       // this.camera.radius = 30;
       // this.camera.heightOffset = 10;
@@ -14004,6 +14015,7 @@ function () {
       this.keyboard.upPressed = false;
       this.keyboard.downPressed = false;
       this.direction = _babylonjs.Vector3.Zero();
+      this.camera.direction = this.camera.getFrontPosition(1).subtract(this.camera.position).normalize();
       this.speed = 2; // user input
 
       window.addEventListener("keydown", function (event) {
@@ -14011,23 +14023,19 @@ function () {
 
         if (code === 'ArrowUp' || code === 'KeyW') {
           _this3.direction.z = -1 * _this3.speed;
-          _this3.keyboard.upPressed = true;
-          console.log('up', _this3.keyboard);
+          _this3.keyboard.upPressed = true; // console.log('up', this.keyboard);
         } else if (code === 'ArrowDown' || code === 'KeyS') {
           _this3.direction.z = 1 * _this3.speed;
-          _this3.keyboard.downPressed = true;
-          console.log('down', _this3.keyboard);
+          _this3.keyboard.downPressed = true; // console.log('down', this.keyboard);
         } // Left and Right controls
 
 
         if (code === 'ArrowLeft' || code === 'KeyA') {
           _this3.direction.x = 1 * _this3.speed;
-          _this3.keyboard.leftPressed = true;
-          console.log('left', _this3.keyboard);
+          _this3.keyboard.leftPressed = true; // console.log('left', this.keyboard);
         } else if (code === 'ArrowRight' || code === 'KeyD') {
           _this3.direction.x = -1 * _this3.speed;
-          _this3.keyboard.rightPressed = true;
-          console.log('right', _this3.keyboard);
+          _this3.keyboard.rightPressed = true; // console.log('right', this.keyboard);
         } // Jump control
 
 
@@ -14040,23 +14048,19 @@ function () {
 
         if (code === 'ArrowUp' || code === 'KeyW') {
           _this3.direction.z = 0;
-          _this3.keyboard.upPressed = false;
-          console.log('up', _this3.keyboard);
+          _this3.keyboard.upPressed = false; // console.log('up', this.keyboard);
         } else if (code === 'ArrowDown' || code === 'KeyS') {
           _this3.direction.z = 0;
-          _this3.keyboard.downPressed = false;
-          console.log('down', _this3.keyboard);
+          _this3.keyboard.downPressed = false; // console.log('down', this.keyboard);
         } // Left and Right controls
 
 
         if (code === 'ArrowLeft' || code === 'KeyA') {
           _this3.direction.x = 0;
-          _this3.keyboard.leftPressed = false;
-          console.log('left', _this3.keyboard);
+          _this3.keyboard.leftPressed = false; // console.log('left', this.keyboard);
         } else if (code === 'ArrowRight' || code === 'KeyD') {
           _this3.direction.x = 0;
-          _this3.keyboard.rightPressed = false;
-          console.log('right', _this3.keyboard);
+          _this3.keyboard.rightPressed = false; // console.log('right', this.keyboard);
         } // Jump control
 
 
@@ -14121,7 +14125,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60460" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52122" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
