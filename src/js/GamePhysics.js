@@ -122,6 +122,12 @@ class Game {
       new Vector3(0, 5, -10),
       this.scene
     );
+    this.camera.lowerRadiusLimit = 5;
+    this.camera.upperRadiusLimit = 70;
+    this.camera.lowerAlphaLimit = 1;
+    this.camera.upperalphalimit = 1;
+    this.camera.lowerBetaLimit = Math.PI/10;
+    this.camera.upperBetaLimit = Math.PI/2;
 
     // // Follow Cam
     // this.camera = new FollowCamera("FollowCam", new Vector3(0, 5, -10), this.scene);
