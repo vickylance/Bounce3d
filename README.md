@@ -30,6 +30,8 @@ Checkout the live demo of the game in the below URL.
 11. Materials for Ball, Ground and Environment
 12. Tweak lighting & shadows in the scene
 13. Add sound effects and background music
+14. Depth of field
+15. Motion blur
 
 ### Game Mechanics
 
