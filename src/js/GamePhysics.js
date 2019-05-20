@@ -4,6 +4,7 @@ import {
   Engine,
   Vector3,
   Mesh,
+  Tools,
   MeshBuilder,
   ArcRotateCamera,
   HemisphericLight,
@@ -18,6 +19,36 @@ import {
   OimoJSPlugin
 } from "babylonjs";
 
+// class MyLoadingScreen {
+//   //optional, but needed due to interface definitions
+//   constructor(loadingUIText) {
+//     this.loadingUIText = loadingUIText;
+//     this.loadingUIBackgroundColor = "#33333";
+//     console.log("construc")
+//   }
+//   displayLoadingUI() {
+//     alert(this.loadingUIText);
+//     console.log("display loading")
+//   }
+
+//   hideLoadingUI() {
+//     alert("Loaded!");
+//   }
+// }
+function MyLoadingScreen( /* variables needed, for example:*/ text) {
+  //init the loader
+  this.loadingUIText = text;
+  console.log("yolo");
+}
+MyLoadingScreen.prototype.displayLoadingUI = function() {
+  console.log("yolo1");
+  alert(this.loadingUIText);
+};
+MyLoadingScreen.prototype.hideLoadingUI = function() {
+  console.log("yolo2");
+  alert("Loaded!");
+};
+
 class Game {
   constructor(elementId) {
     // Get the canvas DOM element
@@ -27,6 +58,9 @@ class Game {
       preserveDrawingBuffer: true,
       stencil: true
     });
+    this.loadingScreen = new MyLoadingScreen("I'm loading!!");
+    //Set the loading screen in the engine to replace the default one
+    this.engine.loadingScreen = this.loadingScreen;
     // the canvas/window resize event handler
     window.addEventListener("resize", () => {
       this.engine.resize();
@@ -68,23 +102,6 @@ class Game {
     );
     // sphere.physicsImpostor.setLinearVelocity(new Vector3(1, 0, 1));
 
-    // Move the ball
-    this.scene.registerBeforeRender(() => {
-      // move player.
-      sphere.applyImpulse(this.direction, sphere.position);
-      // make the player jump
-      if (this.keyboard.jump && sphere.canJump) {
-        console.log("jump")
-        sphere.applyImpulse(new Vector3(0, 200, 0), sphere.position);
-        this.keyboard.jump = false;
-        sphere.canJump = false;
-      }
-      // console.log(this.camera.getFrontPosition(1));
-      // console.log(this.camera.getDirection(new Vector3(0, sphere.position.y, 0)));
-      
-      // sphere.physicsImpostor.setLinearVelocity(this.direction);
-      // this.applyImpulse(this.direction, this.position);
-    });
     let collisionDetection = () => {
       console.log("Collision happened");
       sphere.canJump = true;
@@ -119,6 +136,26 @@ class Game {
     // setup objects to receive shadow
     ground.receiveShadows = true;
 
+    // Move the ball
+    this.scene.registerBeforeRender(() => {
+      // move player.
+      let impulseDirection = this.camera.getDirection(this.direction); // Rotate the direction into the camera's local space
+      impulseDirection.y = 0; // Discard the y component
+      impulseDirection.normalize(); // Make it of length 1 again
+      sphere.applyImpulse(impulseDirection.scale(this.speed), sphere.position);
+      // make the player jump
+      if (this.keyboard.jump && sphere.canJump) {
+        console.log("jump")
+        sphere.applyImpulse(new Vector3(0, 200, 0), sphere.position);
+        this.keyboard.jump = false;
+        sphere.canJump = false;
+      }
+      // console.log(this.camera.getFrontPosition(1));
+      // console.log(this.camera.getDirection(new Vector3(0, sphere.position.y, 0)));
+      
+      // sphere.physicsImpostor.setLinearVelocity(this.direction);
+      // this.applyImpulse(this.direction, this.position);
+    });
     return this.render();
   }
 
@@ -126,9 +163,9 @@ class Game {
     // Create a ArcRotateCamera, and set its position to {x: 0, y: 5, z: -10}
     this.camera = new ArcRotateCamera(
       "mainCamera",
-      Math.PI / 2,
-      Math.PI / 3,
-      45,
+      Tools.ToRadians(90),
+      Tools.ToRadians(60),
+      70,
       new Vector3(0, 5, -10),
       this.scene
     );
@@ -173,7 +210,7 @@ class Game {
       new Vector3(0, -1, -1),
       this.scene
     );
-    this.dirLight.position = new Vector3(0, 50, 50);
+    this.dirLight.position = new Vector3(0, 30, 30);
     this.dirLight.intensity = 0.5;
 
     // Create an emmisive texture sphere in the location of the directional light
@@ -208,29 +245,29 @@ class Game {
     this.direction = Vector3.Zero();
     this.camera.direction = this.camera.getFrontPosition(1).subtract(this.camera.position).normalize();
 
-    this.speed = 2;
+    this.speed = -7;
     // user input
     window.addEventListener("keydown", event => {
       let { code } = event;
 
       // Forward and Backward controls
       if (code ==='ArrowUp' || code === 'KeyW') {
-        this.direction.z = -1 * this.speed;
+        this.direction.z = -1;
         this.keyboard.upPressed = true;
         // console.log('up', this.keyboard);
       } else if (code === 'ArrowDown' || code === 'KeyS') {
-        this.direction.z = 1 * this.speed;
+        this.direction.z = 1;
         this.keyboard.downPressed = true;
         // console.log('down', this.keyboard);
       }
 
       // Left and Right controls
       if (code === 'ArrowLeft' || code === 'KeyA') {
-        this.direction.x = 1 * this.speed;
+        this.direction.x = 1;
         this.keyboard.leftPressed = true;
         // console.log('left', this.keyboard);
       } else if (code === 'ArrowRight' || code === 'KeyD') {
-        this.direction.x = -1 * this.speed;
+        this.direction.x = -1;
         this.keyboard.rightPressed = true;
         // console.log('right', this.keyboard);
       }
