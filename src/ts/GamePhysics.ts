@@ -1,20 +1,25 @@
 import * as CANNON from "cannon";
-import {
-  Scene,
-  Engine,
-  AssetsManager,
-  Vector3,
-  Mesh,
-  Tools,
-  ArcRotateCamera,
-  HemisphericLight,
-  DirectionalLight,
-  ShadowGenerator,
-  StandardMaterial,
-  Color3,
-  PhysicsImpostor,
-  CannonJSPlugin,
-} from "@babylonjs/core";
+import { Engine } from '@babylonjs/core/Engines/engine';
+import { Scene } from '@babylonjs/core/scene';
+import { Vector3, Color3 } from "@babylonjs/core/Maths/math";
+import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
+import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
+import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
+import { ShadowGenerator } from "@babylonjs/core/Lights/Shadows/shadowGenerator";
+import { Mesh } from "@babylonjs/core/Meshes/mesh";
+import { StandardMaterial } from "@babylonjs/core/Materials/standardMaterial";
+import { Tools } from '@babylonjs/core/Misc/tools';
+import { AssetsManager } from '@babylonjs/core/Misc/assetsManager';
+import { PhysicsImpostor } from '@babylonjs/core/Physics/physicsImpostor';
+import { CannonJSPlugin } from '@babylonjs/core/Physics/Plugins/cannonJSPlugin';
+import '@babylonjs/loaders/OBJ';
+
+ // required side effects
+import "@babylonjs/core/Meshes/meshBuilder";
+import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
+import '@babylonjs/core/Physics/physicsEngineComponent';
+import '@babylonjs/core/Loading/loadingScreen';
+
 // import '../scss/main.scss';
 
 // class MyLoadingScreen {
@@ -187,15 +192,28 @@ class Game {
       // this.applyImpulse(this.direction, this.position);
     });
 
+    this.loadAllAssets();
+    return this.render();
+  }
 
+  loadAllAssets() {
     this.assetsManager = new AssetsManager(this.scene);
-    
-    var meshTask = this.assetsManager.addMeshTask("skull task", "", "./models/", "skull.babylon");
 
-    meshTask.onSuccess = function (task) {
+    // blue ball
+    const blueBallTask = this.assetsManager.addMeshTask("blue ball task", "", "./models/3d-minigolf-pack/Models", "Ball_blue_01.obj");
+    blueBallTask.onSuccess = function (task) {
       task.loadedMeshes[0].position = Vector3.Zero();
     }
-    return this.render();
+    // green ball
+    const greenBallTask = this.assetsManager.addMeshTask("green ball task", "", "./models/3d-minigolf-pack/Models", "Ball_green_01.obj");
+    greenBallTask.onSuccess = function (task) {
+      task.loadedMeshes[0].position = new Vector3(1, 0, 0);
+    }
+    // red ball
+    const redBallTask = this.assetsManager.addMeshTask("red ball task", "", "./models/3d-minigolf-pack/Models", "Ball_red_01.obj");
+    redBallTask.onSuccess = function (task) {
+      task.loadedMeshes[0].position = new Vector3(0, 0, 1);
+    }
   }
 
   setupCamera() {
