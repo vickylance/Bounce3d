@@ -53,7 +53,7 @@
     "dev": "webpack-dev-server --env=dev --open",
     "build": "webpack --env=prod",
     "dev:parcel": "rimraf ./docs && parcel ./src/index.html -d docs",
-    "build:parcel": "rimraf ./docs && parcel build ./src/index.html -d docs --public-url ./ --no-source-maps --experimental-scope-hoisting"
+    "build:parcel": "rimraf ./docs && parcel build ./src/index.html -d docs --public-url ./ --no-source-maps"
   },
   "husky": {
     "hooks": {
