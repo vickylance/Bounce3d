@@ -93,3 +93,4 @@ typings/
 dist
 yarn.lock
 .vscode
+.semaphore
