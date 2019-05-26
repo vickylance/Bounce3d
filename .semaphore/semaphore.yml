@@ -1,63 +1,60 @@
-version: v1.0
-name: First pipeline example
+version: v1.1
+name: Bounce3d Build
 agent:
   machine:
     type: e1-standard-2
     os_image: ubuntu1804
 
 blocks:
-  - name: "Build"
+  - name: Install dependencies 
     task:
       env_vars:
-        - name: APP_ENV
-          value: prod
-      jobs:
-      - name: Docker build
+        - name: NODE_ENV
+          value: production
+        - name: CI
+          value: 'true'
+      prologue:
         commands:
+          # Get the latest version of our source code from GitHub:
           - checkout
-          - ls -1
-          - echo $APP_ENV
-          - echo "Docker build..."
-          - echo "done"
+          # Use the version of Node.js specified in .nvmrc.
+          # Semaphore provides nvm preinstalled.
+          - nvm use
+          - node --version
+          - npm --version
+      jobs:
+        # First parallel job:
+        - name: client npm install and cache
+          commands:
+            # Restore dependencies from cache. This command will not fail in
+            # case of a cache miss. In case of a cache hit, npm install will
+            # run very fast.
+            # For more info on caching, see https://docs.semaphoreci.com/article/68-caching-dependencies
+            - cache restore client-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),client-node-modules-$SEMAPHORE_GIT_BRANCH,client-node-modules-master
+            - npm install
 
-  - name: "Smoke tests"
+            # Store the latest version of node modules in cache to reuse in
+            # further blocks:
+            - cache store client-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json) node_modules
+
+  - name: Build
     task:
+      env_vars:
+        - name: NODE_ENV
+          value: test
+        - name: CI
+          value: 'true'
+      prologue:
+        commands:
+          - checkout
+          - nvm use
+          - node --version
+          - npm --version
       jobs:
-      - name: Smoke
-        commands:
-          - checkout
-          - echo "make smoke"
+        - name: Client Build
+          commands:
+            # At this point we can assume 100% cache hit rate of node modules:
+            - cache restore client-node-modules-$SEMAPHORE_GIT_BRANCH-$(checksum package-lock.json),client-node-modules-$SEMAPHORE_GIT_BRANCH,client-node-modules-master
 
-  - name: "Unit tests"
-    task:
-      jobs:
-      - name: RSpec
-        commands:
-          - checkout
-          - echo "make rspec"
-
-      - name: Lint code
-        commands:
-          - checkout
-          - echo "make lint"
-
-      - name: Check security
-        commands:
-          - checkout
-          - echo "make security"
-
-  - name: "Integration tests"
-    task:
-      jobs:
-      - name: Cucumber
-        commands:
-          - checkout
-          - echo "make cucumber"
-
-  - name: "Push Image"
-    task:
-      jobs:
-      - name: Push
-        commands:
-          - checkout
-          - echo "make docker.push"
+            # Run task as defined in package.json:
+            - npm run build:parcel
