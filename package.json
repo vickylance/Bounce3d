@@ -55,11 +55,6 @@
     "dev:parcel": "rimraf ./docs && parcel ./src/index.html -d docs",
     "build:parcel": "rimraf ./docs && parcel build ./src/index.html -d docs --public-url ./ --no-source-maps"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm run build:parcel && git add -A"
-    }
-  },
   "keywords": [],
   "author": "",
   "license": "ISC"

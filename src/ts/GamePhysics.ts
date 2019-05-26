@@ -1,7 +1,7 @@
 import * as CANNON from "cannon";
 import { Engine } from '@babylonjs/core/Engines/engine';
 import { Scene } from '@babylonjs/core/scene';
-import { Vector3, Color3 } from "@babylonjs/core/Maths/math";
+import { Vector3, Vector2, Color3 } from "@babylonjs/core/Maths/math";
 import { ArcRotateCamera } from "@babylonjs/core/Cameras/arcRotateCamera";
 import { HemisphericLight } from "@babylonjs/core/Lights/hemisphericLight";
 import { DirectionalLight } from "@babylonjs/core/Lights/directionalLight";
@@ -19,6 +19,7 @@ import "@babylonjs/core/Meshes/meshBuilder";
 import '@babylonjs/core/Lights/Shadows/shadowGeneratorSceneComponent';
 import '@babylonjs/core/Physics/physicsEngineComponent';
 import '@babylonjs/core/Loading/loadingScreen';
+import { OBJFileLoader } from "@babylonjs/loaders/OBJ";
 
 // import '../scss/main.scss';
 
@@ -126,8 +127,8 @@ class Game {
     ballMaterial.diffuseColor = Color3.Red();
     sphere.material = ballMaterial;
     // Move the sphere upward 1/2 of its height
-    sphere.position.y = 20;
-    this.camera.lockedTarget = sphere;
+    sphere.position.x = 200;
+    // this.camera.lockedTarget = sphere;
     sphere.physicsImpostor = new PhysicsImpostor(
       sphere,
       PhysicsImpostor.SphereImpostor,
@@ -198,22 +199,31 @@ class Game {
 
   loadAllAssets() {
     this.assetsManager = new AssetsManager(this.scene);
+    OBJFileLoader.COMPUTE_NORMALS = true;
 
     // blue ball
-    const blueBallTask = this.assetsManager.addMeshTask("blue ball task", "", "./models/3d-minigolf-pack/Models", "Ball_blue_01.obj");
+    const blueBallTask = this.assetsManager.addMeshTask("blue ball task", "", "./models/3d-minigolf-pack/Models/", "Ball_blue_01.obj");
     blueBallTask.onSuccess = function (task) {
-      task.loadedMeshes[0].position = Vector3.Zero();
+      console.log(task.loadedMeshes[0]);
+      task.loadedMeshes.map((mesh) => {
+        mesh.position = Vector3.Zero();
+        mesh.useVertexColors = true;
+        mesh.scaling = new Vector3(10, 10, 10);
+      });
     }
-    // green ball
-    const greenBallTask = this.assetsManager.addMeshTask("green ball task", "", "./models/3d-minigolf-pack/Models", "Ball_green_01.obj");
-    greenBallTask.onSuccess = function (task) {
-      task.loadedMeshes[0].position = new Vector3(1, 0, 0);
+    blueBallTask.onError = function(task, msg, exp) {
+      console.log("TASK:", task, "\nMSG: ", msg, "\nEXP: ", exp);
     }
-    // red ball
-    const redBallTask = this.assetsManager.addMeshTask("red ball task", "", "./models/3d-minigolf-pack/Models", "Ball_red_01.obj");
-    redBallTask.onSuccess = function (task) {
-      task.loadedMeshes[0].position = new Vector3(0, 0, 1);
-    }
+    // // green ball
+    // const greenBallTask = this.assetsManager.addMeshTask("green ball task", "", "./models/3d-minigolf-pack/Models", "Ball_green_01.obj");
+    // greenBallTask.onSuccess = function (task) {
+    //   task.loadedMeshes[0].position = new Vector3(1, 0, 0);
+    // }
+    // // red ball
+    // const redBallTask = this.assetsManager.addMeshTask("red ball task", "", "./models/3d-minigolf-pack/Models", "Ball_red_01.obj");
+    // redBallTask.onSuccess = function (task) {
+    //   task.loadedMeshes[0].position = new Vector3(0, 0, 1);
+    // }
   }
 
   setupCamera() {
