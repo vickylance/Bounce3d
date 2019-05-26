@@ -10,7 +10,7 @@ blocks:
     task:
       env_vars:
         - name: NODE_ENV
-          value: production
+          value: development
         - name: CI
           value: 'true'
       prologue:
@@ -41,7 +41,7 @@ blocks:
     task:
       env_vars:
         - name: NODE_ENV
-          value: test
+          value: development
         - name: CI
           value: 'true'
       prologue:
