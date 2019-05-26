@@ -1,4 +1,4 @@
-# Bounce3D
+# Bounce3D [![Netlify Status](https://api.netlify.com/api/v1/badges/6d8ba40c-aa3a-4da2-990d-d49a6d6b0ced/deploy-status)](https://app.netlify.com/sites/bounce3d/deploys)
 
 A Simple and fun Bounce 3D game using Babylon.js
 
