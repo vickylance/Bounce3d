@@ -52,6 +52,7 @@
     "serve": "live-server ./docs",
     "dev": "webpack-dev-server --env=dev --open",
     "build": "webpack --env=prod",
+    "builder": "parcel build ./src/index.html -d docs --public-url ./ --no-source-maps",
     "dev:parcel": "rimraf ./docs && parcel ./src/index.html -d docs",
     "build:parcel": "rimraf ./docs && parcel build ./src/index.html -d docs --public-url ./ --no-source-maps"
   },
