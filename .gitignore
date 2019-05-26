@@ -93,4 +93,3 @@ typings/
 dist
 yarn.lock
 .vscode
-docs

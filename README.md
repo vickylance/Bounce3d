@@ -4,9 +4,15 @@ A Simple and fun Bounce 3D game using Babylon.js
 
 ## Live demo
 
-Checkout the live demo of the game in the below URL.
+Checkout the live demo of the game in any of the below URLs.
 
-<https://vickylance.github.io/Bounce3d/>
+### Site1
+
+[Bounce3D](https://vickylance.github.io/Bounce3d/)
+
+### Site 2
+
+[Bounce3D](https://bounce3d.netlify.com/)
 
 ## TODO list
 

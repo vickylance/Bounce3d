@@ -1,7 +1,7 @@
 {
   "name": "bounce3d",
   "version": "1.0.0",
-  "description": "",
+  "description": "A classic Bounce 3D game written in Babylon.js",
   "main": "index.js",
   "dependencies": {
     "@babylonjs/core": "^4.0.3",
@@ -12,12 +12,12 @@
     "@babylonjs/post-processes": "^4.0.3",
     "@babylonjs/procedural-textures": "^4.0.3",
     "@babylonjs/serializers": "^4.0.3",
-    "@types/cannon": "^0.1.4",
     "cannon": "^0.6.2"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
+    "@types/cannon": "^0.1.4",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^2.0.2",
     "copy-webpack-plugin": "^5.0.3",
@@ -52,11 +52,20 @@
     "serve": "live-server ./docs",
     "dev": "webpack-dev-server --env=dev --open",
     "build": "webpack --env=prod",
-    "builder": "parcel build ./src/index.html -d docs --public-url ./ --no-source-maps",
     "dev:parcel": "rimraf ./docs && parcel ./src/index.html -d docs",
     "build:parcel": "rimraf ./docs && parcel build ./src/index.html -d docs --public-url ./ --no-source-maps"
   },
-  "keywords": [],
-  "author": "",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run build:parcel && git add -A"
+    }
+  },
+  "keywords": [
+    "Babylon.js",
+    "Bounce3D",
+    "WebGL",
+    ""
+  ],
+  "author": "Vignesh S",
   "license": "ISC"
 }
